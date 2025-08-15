@@ -48,3 +48,38 @@ docker run -d -p 8080:8080 --name hello-app go-hello-world
 docker ps
 docker logs hello-app
 ```
+
+## GitHub Actions 自动构建
+
+本项目配置了GitHub Actions来自动构建和推送Docker镜像到GitHub Container Registry (ghcr.io)。
+
+### 自动触发条件
+
+1. **推送代码**：推送到 `main` 或 `master` 分支时自动构建
+2. **创建标签**：创建 `v*` 格式的标签时自动构建
+3. **发布版本**：在GitHub上发布Release时自动构建
+
+### 镜像标签规则
+
+- `latest`：最新版本
+- `v1.0.0`：具体版本号
+- `main-abc123`：分支名+提交哈希
+
+### 使用ghcr.io镜像
+
+```bash
+# 拉取最新镜像
+docker pull ghcr.io/你的用户名/go-hello-1:latest
+
+# 拉取特定版本
+docker pull ghcr.io/你的用户名/go-hello-1:v1.0.0
+
+# 运行容器
+docker run -p 8080:8080 ghcr.io/你的用户名/go-hello-1:latest
+```
+
+### 权限配置
+
+确保仓库设置中启用了：
+- Actions → General → Workflow permissions → "Read and write permissions"
+- Packages → "Inherit access from source repository"
